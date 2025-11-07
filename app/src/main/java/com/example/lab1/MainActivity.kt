@@ -46,14 +46,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-class MyViewModel : ViewModel() {
-    val homePageText = mutableStateOf("MAIN PAGE")
-    val homeText = homePageText
-    fun updateHomeText(newText: String) {
-        homePageText.value = newText
-    }
-
-}
 @PreviewScreenSizes
 @Composable
 fun Lab1App() {
