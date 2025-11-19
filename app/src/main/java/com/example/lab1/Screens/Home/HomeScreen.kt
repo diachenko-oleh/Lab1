@@ -35,15 +35,33 @@ fun HomeScreen(modifier: Modifier) {
         Button(
             modifier = Modifier.Companion.padding(top = 20.dp).fillMaxWidth(),
             onClick = { viewModel.updateHomeText("це основна сторінка") }) { Text("BTN") }
+
+        Button(
+            modifier = Modifier.padding(top = 20.dp).fillMaxWidth(),
+            onClick = { navController.navigate(HomeSubScreen.SubA.route) }
+        ) {
+            Text("Перейти на підекран A")
+        }
+
+        Button(
+            modifier = Modifier.padding(top = 20.dp).fillMaxWidth(),
+            onClick = { navController.navigate(HomeSubScreen.SubB.route) }
+        ) {
+            Text("Перейти на підекран B")
+        }
+
         NavHost(
             navController = navController,
-            startDestination = HomeSubScreen.SubA.route,
+            startDestination = "home_root"
         ) {
+            composable("home_root") {
+            }
             composable(HomeSubScreen.SubA.route) {
                 SubScreenA(
                     onNavigateToB = {
                         navController.navigate(HomeSubScreen.SubB.route)
-                    }
+                    },
+                    onBack = { navController.navigateUp() }
                 )
             }
 

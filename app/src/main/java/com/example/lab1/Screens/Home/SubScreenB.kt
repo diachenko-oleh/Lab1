@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package com.example.lab1.Screens.Home
 
 import androidx.compose.material3.TopAppBar
@@ -37,14 +35,4 @@ fun SubScreenB(onBack: () -> Unit) {
     }
 }
 
-@Composable
-fun MyTopAppBar(onBack: () -> Unit) {
-    TopAppBar(
-        title = { },
-        navigationIcon = {
-            IconButton(onClick = onBack) {
-                Icon(Icons.Default.ArrowBack, contentDescription = "Назад")
-            }
-        }
-    )
-}
+
