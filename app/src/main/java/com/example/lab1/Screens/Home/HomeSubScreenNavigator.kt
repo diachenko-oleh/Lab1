@@ -11,17 +11,5 @@ import androidx.compose.runtime.Composable
 sealed class HomeSubScreen(val route: String) {
     object SubA : HomeSubScreen("subA")
     object SubB : HomeSubScreen("subB")
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MyTopAppBar(onBack: () -> Unit) {
-    TopAppBar(
-        title = { },
-        navigationIcon = {
-            IconButton(onClick = onBack) {
-                Icon(Icons.Default.ArrowBack, contentDescription = "Назад")
-            }
-        }
-    )
+    object  Main : HomeSubScreen("main")
 }
