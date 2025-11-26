@@ -56,6 +56,7 @@ dependencies {
     implementation(libs.androidx.ui)
     implementation(libs.androidx.compose.foundation.layout)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.compose.foundation)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

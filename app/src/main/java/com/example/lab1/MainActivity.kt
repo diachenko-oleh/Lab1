@@ -22,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import com.example.lab1.Screens.Home.HomeScreen
-import com.example.lab1.Screens.Page1
+import com.example.lab1.Screens.Page1.Page1
 import com.example.lab1.Screens.Page2
 import com.example.lab1.ui.theme.Lab1Theme
 
