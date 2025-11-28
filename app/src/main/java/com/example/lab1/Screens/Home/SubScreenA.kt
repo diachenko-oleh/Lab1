@@ -24,7 +24,7 @@ fun SubScreenA(onBack: () -> Unit, onNavigateToB: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Subscreen A") },
+                title = { Text("Підекран A") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Назад")

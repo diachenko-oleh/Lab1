@@ -32,7 +32,7 @@ fun HomeScreen(modifier: Modifier) {
             Main(
                 viewModel,
                 {navController.navigate(HomeSubScreen.SubA.route) },
-                {navController.navigate(HomeSubScreen.SubA.route) }
+                {navController.navigate(HomeSubScreen.SubB.route) }
             )
         }
 
