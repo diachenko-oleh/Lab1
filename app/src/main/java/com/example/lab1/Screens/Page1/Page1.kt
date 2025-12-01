@@ -1,18 +1,14 @@
 package com.example.lab1.Screens.Page1
 
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -24,8 +20,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -49,30 +43,12 @@ fun Page1(modifier: Modifier) {
         LazyColumn(
             modifier = modifier.padding(padding).fillMaxWidth()
         ) {
-
-            /*item {
-                Text("--:", fontSize = 24.sp)
-            }*/
-            item{
-                LazyRow(
-                    modifier = Modifier.fillMaxWidth()
-                ){
-                    items(megaList) { item ->
-                        when (item) {
-                            is Cube -> CubeCard(item)
-                            is Sphere -> SphereCard(item)
-                        }
-                    }
-                }
-            }/*
-            item {
-                Spacer(modifier = Modifier.height(10.dp))
-                Text("--:", fontSize = 24.sp)
-            }*/
             items(megaList) { item ->
                 when (item) {
                     is Cube -> CubeCard(item)
                     is Sphere -> SphereCard(item)
+                    is CubeList -> CubeListCard(item)
+                    is SphereList -> SphereListCard(item)
                 }
             }
         }
@@ -115,5 +91,29 @@ fun SphereCard(sph: Sphere){
             Text("Сторона: ${sph.radius}")
         }
 
+    }
+}
+
+@Composable
+fun CubeListCard(cubeList: CubeList) {
+    LazyRow(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        items(cubeList.cubeList) { item ->
+            CubeCard(item)
+        }
+    }
+}
+
+@Composable
+fun SphereListCard(sphereList: SphereList) {
+    LazyRow(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        items(sphereList.sphereList) { item ->
+            SphereCard(item)
+        }
     }
 }
