@@ -1,4 +1,4 @@
-package com.example.lab1.Screens.Page1
+package com.example.lab1.Model
 
 sealed interface IListable{
     val id: Int

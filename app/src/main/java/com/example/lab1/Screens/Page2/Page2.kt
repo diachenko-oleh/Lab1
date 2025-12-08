@@ -1,4 +1,4 @@
-package com.example.lab1.Screens
+package com.example.lab1.Screens.Page2
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

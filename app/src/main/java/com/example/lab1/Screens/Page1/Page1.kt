@@ -3,12 +3,14 @@ package com.example.lab1.Screens.Page1
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,6 +25,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.lab1.Entity.TableWithClient
+import com.example.lab1.Model.Client
+import com.example.lab1.Model.ClientList
+import com.example.lab1.Model.IListable
+import com.example.lab1.Model.Table
+import com.example.lab1.Model.TableList
 import com.example.lab1.ViewModel.MyViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,83 +45,149 @@ fun Page1(modifier: Modifier) {
             )
         }
     ) { padding ->
-        LaunchedEffect(Unit) {
-            viewModel.getAllData()
-        }
-        LazyColumn(
-            modifier = modifier.padding(padding).fillMaxWidth()
-        ) {
-            items(megaList) { item ->
-                when (item) {
-                    is Cube -> CubeCard(item)
-                    is Sphere -> SphereCard(item)
-                    is CubeList -> CubeListCard(item)
-                    is SphereList -> SphereListCard(item)
+
+        Column(modifier = modifier) {
+            LaunchedEffect(Unit) {
+                viewModel.getAllData()
+            }
+
+            LazyColumn(
+                modifier = modifier
+                    .padding(top = 30.dp)
+                    .fillMaxWidth()
+                    .weight(1.0f)
+
+            ) {
+                items(megaList) { item ->
+                    when (item) {
+                        is Client -> ClientCard(item, { viewModel.deleteClientFromDb(item) })
+                        is Table -> TableCard(item,viewModel)
+                        is ClientList -> ClientListCard(item)
+                        is TableList -> { /* TODO */ }
+                    }
                 }
             }
+
+            Button(
+                modifier = Modifier
+                    .padding(top = 20.dp)
+                    .fillMaxWidth(),
+                onClick = {
+                    viewModel.loadAllDataToDb()
+                }
+            )
+            { Text("Load Data to Data Base") }
+
+            Button(
+                modifier = Modifier
+                    .padding(20.dp)
+                    .fillMaxWidth(),
+                onClick = {
+                    viewModel.clearAllDataFromDb()
+                })
+            { Text("Clear Data Base") }
         }
 
-
     }
+
 }
 
 @Composable
-fun CubeCard(cube: Cube){
+fun ClientCard(client: Client, onDelClient: () -> Unit){
     Card(
         modifier = Modifier.padding(10.dp).fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(10.dp)
     ) {
-        Text("Куб: ", Modifier.padding(10.dp), fontSize = 20.sp)
+        Text("Клієнт: ", Modifier.padding(10.dp), fontSize = 20.sp)
         Column(
             modifier = Modifier.padding(5.dp)
         ) {
-            Text("Сторона: ${cube.side}")
-            Text("Сторона: ${cube.side}")
-            Text("Сторона: ${cube.side}")
+            Text("client name: ${client.name}")
+            Text("client email: ${client.email}")
         }
+        Button(
+            onClick = onDelClient
+        )
+        { Text("delete") }
     }
 }
 
 @Composable
-fun SphereCard(sph: Sphere){
+fun ClientCardInList(client: Client){
     Card(
         modifier = Modifier.padding(10.dp).fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(10.dp)
     ) {
-        Text("Сфера: ", Modifier.padding(10.dp), fontSize = 20.sp)
+        Text("Клієнт: ", Modifier.padding(10.dp), fontSize = 20.sp)
+        Column(
+            modifier = Modifier.padding(5.dp)
+        ) {
+            Text("client name: ${client.name}")
+            Text("client email: ${client.email}")
+        }
+    }
+}
+
+@Composable
+fun TableCard(table: Table, viewModel: MyViewModel){
+    Card(
+        modifier = Modifier.padding(10.dp).fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp),
+        elevation = CardDefaults.cardElevation(10.dp)
+    ) {
+        Text("Стіл: ", Modifier.padding(10.dp), fontSize = 20.sp)
         Column(
             modifier = Modifier.padding(5.dp)
         ){
-            Text("Сторона: ${sph.radius}")
-            Text("Сторона: ${sph.radius}")
-            Text("Сторона: ${sph.radius}")
+            Text("table capacity: ${table.capacity}")
+            Text("client: ${table.client}")
         }
 
+        Row(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Button(
+                onClick = {
+                    viewModel.changeTableCapacity(table, 1)
+                })
+            { Text("+1") }
+
+            Button(
+                onClick = {
+                    viewModel.changeTableCapacity(table, -1)
+                })
+            { Text("-1") }
+            Button(
+                onClick = {
+                    viewModel.deleteTableFromDb(table)
+                })
+            { Text("delete") }
+        }
     }
 }
 
 @Composable
-fun CubeListCard(cubeList: CubeList) {
+fun ClientListCard(clientList: ClientList) {
     LazyRow(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        items(cubeList.cubeList) { item ->
-            CubeCard(item)
+        items(clientList.clientList) { item ->
+            ClientCardInList(item)
         }
     }
 }
 
 @Composable
-fun SphereListCard(sphereList: SphereList) {
+fun TableListCard(tableList: TableList, viewModel: MyViewModel) {
     LazyRow(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        items(sphereList.sphereList) { item ->
-            SphereCard(item)
+        items(tableList.tableList) { item ->
+            TableCard(item, viewModel)
         }
     }
 }
