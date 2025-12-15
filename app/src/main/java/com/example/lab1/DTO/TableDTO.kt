@@ -1,7 +1,14 @@
 package com.example.lab1.DTO
 
-data class TableDTO(
-    val id: Int,
-    val client: ClientDTO,
-    val capacity: Int
+import com.google.gson.annotations.SerializedName
+
+data class TableDto(
+    @SerializedName("table_id")
+    val id: Int = 0,
+
+    @SerializedName("capacity")
+    val capacity: Int,
+
+    @SerializedName("client_id")
+    val clientId: Int
 )

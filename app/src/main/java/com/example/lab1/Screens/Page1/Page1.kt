@@ -48,7 +48,7 @@ fun Page1(modifier: Modifier) {
 
         Column(modifier = modifier) {
             LaunchedEffect(Unit) {
-                viewModel.getAllData()
+                viewModel.loadAllDataToDb()
             }
 
             LazyColumn(

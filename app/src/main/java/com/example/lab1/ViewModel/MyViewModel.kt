@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.lab1.Model.Client
 import com.example.lab1.Model.IListable
@@ -23,21 +22,18 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
     private val _megaList = MutableStateFlow<List<IListable>>(emptyList())
     val megaList: StateFlow<List<IListable>> = _megaList.asStateFlow()
 
-    suspend fun getAllData() {
-        _megaList.value = (repo.getAllData())
+    private suspend fun updateData(fromApi: Boolean = false) {
+        _megaList.value = if (fromApi) {
+            repo.loadFromApi()
+            repo.getMegaListFromDb()
+        } else {
+            repo.getMegaListFromDb()
+        }
     }
 
     fun loadAllDataToDb() {
         viewModelScope.launch {
-            repo.deleteAllTables()
-            repo.deleteAllClients()
-
-            var clients = repo.getClients()
-            repo.insertAllClients(clients)
-            clients = repo.getAllClients()
-            val tables = repo.getTables(clients)
-            repo.insertAllTables(tables)
-            getAllData()
+            updateData(fromApi = true)
         }
     }
 
@@ -45,29 +41,29 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
         viewModelScope.launch {
             repo.deleteAllTables()
             repo.deleteAllClients()
-            getAllData()
+            _megaList.value = emptyList()
         }
     }
 
-    fun deleteTableFromDb(table: Table){
+    fun deleteTableFromDb(table: Table) {
         viewModelScope.launch {
             repo.deleteTable(table)
-            getAllData()
+            updateData()
         }
     }
 
-    fun deleteClientFromDb(client: Client){
+    fun deleteClientFromDb(client: Client) {
         viewModelScope.launch {
             repo.deleteClient(client)
-            getAllData()
+            updateData()
         }
     }
 
-    fun changeTableCapacity(table: Table, delta: Int){
-        val theTable = table.copy(capacity = table.capacity + delta)
+    fun changeTableCapacity(table: Table, delta: Int) {
+        val updated = table.copy(capacity = table.capacity + delta)
         viewModelScope.launch {
-            repo.updateTable(theTable)
-            getAllData()
+            repo.updateTable(updated)
+            updateData()
         }
     }
 

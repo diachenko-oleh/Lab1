@@ -6,8 +6,10 @@ import com.example.lab1.Model.Table
 
 
 interface AppRepo {
-    fun getClients(): List<Client>
-    fun getTables(authors: List<Client>): List<Table>
+    suspend fun loadFromApi()
+
+    suspend fun getMegaListFromDb(): List<IListable>
+
     suspend fun getAllClients(): List<Client>
     suspend fun getClientById(id: Int): Client
     suspend fun insertAllClients(clients: List<Client>)
@@ -23,5 +25,6 @@ interface AppRepo {
     suspend fun deleteTable(table: Table)
     suspend fun deleteAllTables()
     suspend fun updateTable(table: Table)
-    suspend fun getAllData(): List<IListable>
+    //suspend fun getAllData(): List<IListable>
+
 }

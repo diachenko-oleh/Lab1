@@ -1,5 +1,6 @@
 package com.example.lab1.Repository
 
+import com.example.lab1.API.RetrofitClient
 import com.example.lab1.DAO.AppDAO
 import com.example.lab1.Model.Client
 import com.example.lab1.Model.ClientList
@@ -11,66 +12,27 @@ import kotlin.collections.map
 
 class AppRepoImpl(private val appDao: AppDAO):AppRepo {
 
-    val clientList = listOf(
-        Client(
-            name = "Client 1",
-            email = "email1@gmail.com"
-        ),
+    override suspend fun loadFromApi() {
+        val response = RetrofitClient.api.getAllData()
 
-        Client(
-            name = "Client 2",
-            email = "email2@gmail.com"
-        ),
+        appDao.deleteAllTables()
+        appDao.deleteAllClients()
 
-        Client(
-            name = "Client 3",
-            email = "email3@gmail.com"
-        ),
-        Client(
-            name = "Client 4",
-            email = "email4@gmail.com"
-        ),
-        Client(
-            name = "Client 5",
-            email = "email5@gmail.com"
+        appDao.insertAllClients(response.clients.map { it.toEntity() })
+        appDao.insertAllTables(response.tables.map { it.toEntity() })
+    }
+
+    override suspend fun getMegaListFromDb(): List<IListable> {
+        var megaList: List<IListable> = appDao.getAllTables().map { it.toDomain() }
+        megaList = megaList.plus(
+            ClientList(appDao.getAllClients().map { it.toDomain() })
         )
-    )
-
-    override fun getClients(): List<Client> {
-        return clientList
-    }
-
-    override fun getTables(clients: List<Client>): List<Table> {
-       return  listOf(
-           Table(
-               capacity = 2,
-               client = clients[0],
-           ),
-           Table(
-               capacity = 2,
-               client = clients[1]
-           ),
-           Table(
-               capacity = 2,
-               client = clients[1]
-           ),
-           Table(
-               capacity = 4,
-               client = clients[2]
-           ),
-           Table(
-               capacity = 4,
-               client = clients[3]
-           )
-       )
-    }
-
-    override suspend fun getAllData(): List<IListable> {
-        var megaList: List<IListable> = getAllTables()
-        megaList = megaList.plus(ClientList(getAllClients()))
-        megaList = megaList.plus(getAllClients())
+        megaList = megaList.plus(
+            appDao.getAllClients().map { it.toDomain() }
+        )
         return megaList
     }
+
     override suspend fun getAllClients(): List<Client> {
         return appDao.getAllClients().map { it.toDomain() }
     }
